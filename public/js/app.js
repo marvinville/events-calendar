@@ -2081,42 +2081,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var postData, response;
+        var dateFrom, dateTo, diff, postData, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 event.preventDefault();
-                _context.prev = 1;
-                postData = _objectSpread(_objectSpread({}, _this.form), {
-                  dateFrom: moment__WEBPACK_IMPORTED_MODULE_2___default()(_this.form.dateFrom).format("yyyy-MM-DD"),
-                  dateTo: moment__WEBPACK_IMPORTED_MODULE_2___default()(_this.form.dateTo).format("yyyy-MM-DD")
+                dateFrom = moment__WEBPACK_IMPORTED_MODULE_2___default()(_this.form.dateFrom).format("yyyy-MM-DD");
+                dateTo = moment__WEBPACK_IMPORTED_MODULE_2___default()(_this.form.dateTo).format("yyyy-MM-DD");
+                diff = _this.getDateDiff({
+                  dateFrom: dateFrom,
+                  dateTo: dateTo
                 });
-                _context.next = 5;
+                _context.prev = 4;
+
+                if (!(diff < 0)) {
+                  _context.next = 9;
+                  break;
+                }
+
+                toastr__WEBPACK_IMPORTED_MODULE_4___default.a.error("Date To should be later than Date From");
+                _context.next = 15;
+                break;
+
+              case 9:
+                postData = _objectSpread(_objectSpread({}, _this.form), {
+                  dateFrom: dateFrom,
+                  dateTo: dateTo
+                });
+                _context.next = 12;
                 return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/api/events", postData, {
                   headers: {
                     "Content-Type": "application/json"
                   }
                 });
 
-              case 5:
+              case 12:
                 response = _context.sent;
                 _this.apiData = postData;
-                toastr__WEBPACK_IMPORTED_MODULE_4___default.a.success('Event Successfully Saved!');
-                _context.next = 13;
+                toastr__WEBPACK_IMPORTED_MODULE_4___default.a.success("Event Successfully Saved!");
+
+              case 15:
+                _context.next = 20;
                 break;
 
-              case 10:
-                _context.prev = 10;
-                _context.t0 = _context["catch"](1);
+              case 17:
+                _context.prev = 17;
+                _context.t0 = _context["catch"](4);
                 console.error(_context.t0);
 
-              case 13:
+              case 20:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 10]]);
+        }, _callee, null, [[4, 17]]);
       }))();
     },
     getEvents: function getEvents() {
@@ -2158,9 +2177,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var dateTo = (_config$dateTo = config.dateTo) !== null && _config$dateTo !== void 0 ? _config$dateTo : "";
 
       if (dateFrom && dateTo) {
-        var arrFrom = this.splitDate(dateFrom);
-        var arrTo = this.splitDate(dateTo);
-        var diff = arrTo.diff(arrFrom, "days");
+        var diff = this.getDateDiff({
+          dateFrom: dateFrom,
+          dateTo: dateTo
+        });
         var days = [];
         var yearMonth = [];
         var results = [];
@@ -2204,6 +2224,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     dateFormatter: function dateFormatter(date) {
       if (!date) return false;
       return moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format("yyyy-MM-DD");
+    },
+    getDateDiff: function getDateDiff(_ref) {
+      var dateFrom = _ref.dateFrom,
+          dateTo = _ref.dateTo;
+
+      if (dateFrom && dateTo) {
+        var arrFrom = this.splitDate(dateFrom);
+        var arrTo = this.splitDate(dateTo);
+        return arrTo.diff(arrFrom, "days");
+      }
+
+      return 0;
     }
   }
 });

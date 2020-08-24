@@ -138,25 +138,34 @@ export default {
         async handleSave(event) {
             event.preventDefault();
 
+            const dateFrom = moment(this.form.dateFrom).format("yyyy-MM-DD");
+            const dateTo = moment(this.form.dateTo).format("yyyy-MM-DD");
+
+            const diff = this.getDateDiff({
+                dateFrom: dateFrom,
+                dateTo: dateTo
+            });
+
             try {
-                const postData = {
-                    ...this.form,
-                    ...{
-                        dateFrom: moment(this.form.dateFrom).format(
-                            "yyyy-MM-DD"
-                        ),
-                        dateTo: moment(this.form.dateTo).format("yyyy-MM-DD")
-                    }
-                };
+                if (diff < 0) {
+                    toastr.error("Date To should be later than Date From");
+                } else {
+                    const postData = {
+                        ...this.form,
+                        ...{
+                            dateFrom: dateFrom,
+                            dateTo: dateTo
+                        }
+                    };
 
-                const response = await axios.post("/api/events", postData, {
-                    headers: { "Content-Type": "application/json" }
-                });
+                    const response = await axios.post("/api/events", postData, {
+                        headers: { "Content-Type": "application/json" }
+                    });
 
-                this.apiData = postData;
+                    this.apiData = postData;
 
-                toastr.success('Event Successfully Saved!')
-
+                    toastr.success("Event Successfully Saved!");
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -174,10 +183,7 @@ export default {
             const dateTo = config.dateTo ?? "";
 
             if (dateFrom && dateTo) {
-                const arrFrom = this.splitDate(dateFrom);
-                const arrTo = this.splitDate(dateTo);
-
-                const diff = arrTo.diff(arrFrom, "days");
+                const diff = this.getDateDiff({ dateFrom, dateTo });
 
                 let days = [];
                 let yearMonth = [];
@@ -225,6 +231,15 @@ export default {
         dateFormatter(date) {
             if (!date) return false;
             return moment(date).format("yyyy-MM-DD");
+        },
+        getDateDiff({ dateFrom, dateTo }) {
+            if (dateFrom && dateTo) {
+                const arrFrom = this.splitDate(dateFrom);
+                const arrTo = this.splitDate(dateTo);
+
+                return arrTo.diff(arrFrom, "days");
+            }
+            return 0;
         }
     }
 };
