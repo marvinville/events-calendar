@@ -19,6 +19,7 @@ How to install
 4. Once you get inside the project directory, download the dependencies by typing:
 
 `npm install`
+
 `composer install`
 
 5. Setup app. key
@@ -33,7 +34,9 @@ How to install
     iii. Go to .env file and change the following:
 
     `DB_DATABASE=<your database name>`
+
     `DB_USERNAME=<your MySQL username>`
+
     `DB_PASSWORD=<your MySQL password>`
 
 7. Start migrating database tables
@@ -43,3 +46,9 @@ How to install
 How to run the application
 
 `php artisan serve`
+
+8. The terminal will tell you something like:
+
+`Laravel development server started: http://127.0.0.1:8000`
+
+then open it using your browser.
