@@ -19,6 +19,7 @@ How to install
 4. Once you get inside the project directory, download the dependencies by typing:
 
 `npm install`
+`composer install`
 
 5. Setup app. key
 
