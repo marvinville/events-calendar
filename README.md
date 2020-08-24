@@ -20,6 +20,25 @@ How to install
 
 `npm install`
 
+5. Setup app. key
+
+    i. Copy .env.example and name it to .env
+    ii. In your terminal, type: `php artisan key:generate`
+
+6. Setup database connection
+
+    i. Go to MySQL database
+    ii. Create database with your desired name. E.g: events_calendar
+    iii. Go to .env file and change the following:
+
+    `DB_DATABASE=<your database name>`
+    `DB_USERNAME=<your MySQL username>`
+    `DB_PASSWORD=<your MySQL password>`
+
+7. Start migrating database tables
+
+    In your terminal, type: `php artisan migrate`
+
 How to run the application
 
 `php artisan serve`
